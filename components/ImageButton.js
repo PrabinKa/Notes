@@ -6,9 +6,8 @@ function ImageButton({image, overImage, marginStyle}) {
     return(
         <View style={[styles.imageContainer, marginStyle]}>
           <Pressable
-            style={{ flex: 1 }}
             onPress={() => {}}
-            android_ripple={{ color: "#545454" }}
+            style={({pressed}) => pressed ? styles.pressed : styles.unpressed }
           >
             <View style={styles.imageInnerContainer}>
               <Image
@@ -40,4 +39,11 @@ const styles = StyleSheet.create({
         width: 30,
         tintColor: Colors.accent,
       },
+      pressed: {
+        flex: 1,
+        opacity: 0.5
+      },
+      unpressed: {
+        flex: 1
+      }
 })

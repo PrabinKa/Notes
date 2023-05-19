@@ -35,4 +35,16 @@ export const DummyData = [
         category: "Wealth",
         note: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ac rhoncus leo. Nam ac sem sit amet metus rutrum ultricies. Nullam orci sapien, placerat iaculis sodales nec, iaculis in diam. Fusce fringilla metus dolor, sit amet lobortis libero ultrices nec. Ut consectetur consequat nisi, ut cursus orci mollis ut. Aliquam tincidunt nibh in rutrum tristique. Sed varius ultrices magna sed accumsan."
     },
+    {
+        id: 7,
+        title: "Getting Job",
+        category: "Wealth",
+        note: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ac rhoncus leo. Nam ac sem sit amet metus rutrum ultricies. Nullam orci sapien, placerat iaculis sodales nec, iaculis in diam. Fusce fringilla metus dolor, sit amet lobortis libero ultrices nec. Ut consectetur consequat nisi, ut cursus orci mollis ut. Aliquam tincidunt nibh in rutrum tristique. Sed varius ultrices magna sed accumsan."
+    },
+    {
+        id: 8,
+        title: "Getting Job",
+        category: "Wealth",
+        note: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ac rhoncus leo. Nam ac sem sit amet metus rutrum ultricies. Nullam orci sapien, placerat iaculis sodales nec, iaculis in diam. Fusce fringilla metus dolor, sit amet lobortis libero ultrices nec. Ut consectetur consequat nisi, ut cursus orci mollis ut. Aliquam tincidunt nibh in rutrum tristique. Sed varius ultrices magna sed accumsan."
+    },
 ]

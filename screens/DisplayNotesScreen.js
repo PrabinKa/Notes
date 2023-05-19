@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, ScrollView } from "react-native";
 
 import { Colors } from "../constants/Colors";
 import { DummyData } from "../constants/DummyData";
@@ -12,26 +12,27 @@ function DisplayNotesScreen() {
   return (
     <View style={styles.container}>
       <Header title={"Notes App"} />
-      <View>
-        <View style={styles.outerFilterContainer}>
-          <Search />
-          <ImageButton
-            image={require("../assets/filter.png")}
-            overImage={{ tintColor: Colors.secondary }}
-            marginStyle={{ marginHorizontal: 8 }}
-          />
-        </View>
+      <View style={styles.outerFilterContainer}>
+        <Search />
+        <ImageButton
+          image={require("../assets/filter.png")}
+          overImage={{ tintColor: Colors.secondary }}
+          marginStyle={{ marginHorizontal: 8 }}
+        />
+      </View>
         <FlatList
           data={DummyData}
           keyExtractor={(item) => item.id}
+          horizontal={false}
+          numColumns={2}
+          contentContainerStyle={styles.noteContainer}
           renderItem={(item, index) => {
             const itemData = item.item;
             return (
-              <NotesContainer data={itemData} />
+                <NotesContainer data={itemData} />
             );
           }}
         />
-      </View>
     </View>
   );
 }
@@ -47,4 +48,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
+  notesList: {
+    backgroundColor: "red",
+  },
+  noteContainer: {
+    backgroundColor:  Colors.accent,
+  }
 });
