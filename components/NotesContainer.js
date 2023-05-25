@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     margin: 8,
     borderRadius: 8,
     backgroundColor: Colors.secondary,
-    elevation: 5,
+    elevation: 8
   },
   date: {
     color: "black",

@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     padding: 8,
     height: 50,
     width: "70%",
+    backgroundColor: Colors.accent,
     borderColor: Colors.secondary,
     borderWidth: 2,
     borderRadius: 30,

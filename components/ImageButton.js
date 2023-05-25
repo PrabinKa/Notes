@@ -2,11 +2,11 @@ import {View, StyleSheet, Pressable, Image} from "react-native";
 
 import { Colors } from "../constants/Colors";
 
-function ImageButton({image, overImage, marginStyle}) {
+function ImageButton({image, overImage, marginStyle, onPress}) {
     return(
         <View style={[styles.imageContainer, marginStyle]}>
           <Pressable
-            onPress={() => {}}
+            onPress={onPress}
             style={({pressed}) => pressed ? styles.pressed : styles.unpressed }
           >
             <View style={styles.imageInnerContainer}>

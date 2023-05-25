@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, FlatList, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Pressable,
+  Image,
+} from "react-native";
 
 import { Colors } from "../constants/Colors";
 import { DummyData } from "../constants/DummyData";
@@ -8,10 +15,14 @@ import ImageButton from "../components/ImageButton";
 import Search from "../components/Search";
 import NotesContainer from "../components/NotesContainer";
 
-function DisplayNotesScreen() {
+function DisplayNotesScreen({navigation}) {
   return (
     <View style={styles.container}>
-      <Header title={"Notes App"} />
+      <Header
+        title={"Notes App"}
+        firstIcon={require("../assets/menu.png")}
+        secondIcon={require("../assets/delete.png")}
+      />
       <View style={styles.outerFilterContainer}>
         <Search />
         <ImageButton
@@ -20,19 +31,22 @@ function DisplayNotesScreen() {
           marginStyle={{ marginHorizontal: 8 }}
         />
       </View>
-        <FlatList
-          data={DummyData}
-          keyExtractor={(item) => item.id}
-          horizontal={false}
-          numColumns={2}
-          contentContainerStyle={styles.noteContainer}
-          renderItem={(item, index) => {
-            const itemData = item.item;
-            return (
-                <NotesContainer data={itemData} />
-            );
-          }}
-        />
+      <FlatList
+        data={DummyData}
+        keyExtractor={(item) => item.id}
+        horizontal={false}
+        numColumns={2}
+        contentContainerStyle={styles.noteContainer}
+        renderItem={(item, index) => {
+          const itemData = item.item;
+          return <NotesContainer data={itemData} />;
+        }}
+      />
+      <View style={styles.buttonContainer}>
+        <Pressable style={({ pressed }) => pressed && styles.pressed} onPress={() => navigation.navigate('NewNote')} >
+          <Image source={require("../assets/plus.png")} style={styles.image} />
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -45,6 +59,7 @@ const styles = StyleSheet.create({
   },
   outerFilterContainer: {
     flexDirection: "row",
+    backgroundColor: Colors.accent,
     alignItems: "center",
     justifyContent: "space-between",
   },
@@ -52,6 +67,26 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
   },
   noteContainer: {
-    backgroundColor:  Colors.accent,
-  }
+    backgroundColor: Colors.accent,
+  },
+  image: {
+    height: 30,
+    width: 30,
+    tintColor: Colors.accent,
+  },
+  buttonContainer: {
+    position: "absolute",
+    bottom: 10,
+    right: 10,
+    height: 50,
+    width: 50,
+    backgroundColor: Colors.secondary,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 30,
+    elevation: 8
+  },
+  pressed: {
+    opacity: 0.2,
+  },
 });

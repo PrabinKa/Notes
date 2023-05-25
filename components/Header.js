@@ -1,22 +1,23 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  StatusBar,
-} from "react-native";
+import { View, Text, StyleSheet, StatusBar, Pressable } from "react-native";
 
 import { Colors } from "../constants/Colors";
 import ImageButton from "./ImageButton";
 
-const Header = ({title, firstIcon, secondIcon}) => {
+const Header = ({ title, firstIcon, secondIcon, secondButton, backButton }) => {
   return (
     <View style={styles.container}>
       <View style={styles.innerMainContainer}>
-        <ImageButton image={require("../assets/menu.png")} />
+        <ImageButton image={firstIcon} onPress={backButton} />
         <View>
           <Text style={styles.title}>{title}</Text>
         </View>
-        <ImageButton image={require("../assets/delete.png")} />
+        {secondIcon ? (
+          <ImageButton image={require("../assets/delete.png")} />
+        ) : (
+          <Pressable style={({pressed}) => pressed && styles.pressed} >
+          <Text style={styles.save}>{secondButton}</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );
@@ -42,4 +43,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
   },
+  save: {
+    color: Colors.accent,
+    fontSize: 16,
+    fontWeight: "700",
+    marginHorizontal: 10
+  },
+  pressed: {
+    opacity: 0.3
+  }
 });
