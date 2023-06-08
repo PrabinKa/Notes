@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, StatusBar, Pressable } from "react-native";
 import { Colors } from "../constants/Colors";
 import ImageButton from "./ImageButton";
 
-const Header = ({ title, firstIcon, secondIcon, secondButton, backButton }) => {
+const Header = ({ title, firstIcon, secondIcon, secondButton, backButton, onPress, selected }) => {
   return (
     <View style={styles.container}>
       <View style={styles.innerMainContainer}>
@@ -12,9 +12,9 @@ const Header = ({ title, firstIcon, secondIcon, secondButton, backButton }) => {
           <Text style={styles.title}>{title}</Text>
         </View>
         {secondIcon ? (
-          <ImageButton image={require("../assets/delete.png")} />
+          <ImageButton image={require("../assets/delete.png")} onPress={onPress} />
         ) : (
-          <Pressable style={({pressed}) => pressed && styles.pressed} >
+          <Pressable style={({pressed}) => pressed && styles.pressed} onPress={onPress} >
           <Text style={styles.save}>{secondButton}</Text>
           </Pressable>
         )}

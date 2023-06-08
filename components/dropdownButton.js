@@ -2,11 +2,12 @@ import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 
 import { Colors } from "../constants/Colors";
 
-function DropdownButton({children, onPress}) {
+function DropdownButton({children, onPress, selectedCategory}) {
+
   return (
     <Pressable onPress={onPress} style={({pressed}) => pressed && styles.pressed} >
     <View style={styles.buttonContainer}>
-      <Text style={styles.category} >{children}</Text>
+      <Text style={styles.category} >{ selectedCategory ? selectedCategory : children}</Text>
       <Image source={require("../assets/dropdown.png")} style={styles.image} />
     </View>
     </Pressable>

@@ -1,24 +1,45 @@
 import React, { useRef, useState } from "react";
-import { View, StyleSheet, TextInput, Text, Pressable } from "react-native";
+import { View, StyleSheet, TextInput, Alert } from "react-native";
 
 import Header from "../components/Header";
 import DropdownButton from "../components/dropdownButton";
 import { Colors } from "../constants/Colors";
+import { dropdownList } from "../constants/DummyData";
 
-const dropdownList = [
-  { id: 1, list: "Health" },
-  { id: 2, list: "Wealth" },
-  { id: 3, list: "Career" },
-];
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setData } from "../components/async-store/AsyncstorageFunction";
+import Dropdown from "../components/Dropdown";
 
-function CreatingNoteScreen({ navigation }) {
+function CreatingNoteScreen({ navigation, route }) {
   const inputRef = useRef();
-
-  const [noteTitle, setNoteTitle] = useState("");
-  const [note, setNote] = useState("");
-  const [category, setCategory] = useState("");
-
+  const getNoteList = route.params;
+  
   const [toggleDropdown, setToggleDropdown] = useState(false);
+
+  let result = Array.isArray(getNoteList);
+  let isEditing = route.params.isEditing ? route.params.isEditing : false;
+
+  const [noteInputs, setNoteInputs] = useState({
+    id: result ? Math.random().toString(16).slice(2) : getNoteList.note.id,
+    title: result ? "" : getNoteList.note.title,
+    note: result ? "" : getNoteList.note.note,
+    category: result ? "" : getNoteList.note.category,
+    date: JSON.stringify(new Date()).slice(1, 11),
+  });
+
+  const condition =
+    noteInputs.title == "" ||
+    noteInputs.note == "" ||
+    noteInputs.category == "";
+
+  const inputChangeHandler = (inputIdentifier, enteredValue) => {
+    setNoteInputs((curNoteInputs) => {
+      return {
+        ...curNoteInputs,
+        [inputIdentifier]: enteredValue,
+      };
+    });
+  };
 
   const backHandler = () => {
     navigation.goBack();
@@ -29,7 +50,59 @@ function CreatingNoteScreen({ navigation }) {
   };
 
   const chooseCategory = (cat) => {
-    console.warn(cat)
+    setNoteInputs({ ...noteInputs, category: cat });
+    setToggleDropdown(!toggleDropdown);
+  };
+
+  const storeNewNotes = async () => {
+    if (isEditing) {
+      if (condition) {
+        Alert.alert("Missing", "You are missing some field !");
+      } else {
+        const jsonValue = await AsyncStorage.getItem("Note");
+        let newArr = JSON.parse(jsonValue).filter(function (item) {
+          return item.id !== noteInputs.id;
+        });
+        await AsyncStorage.removeItem("Note");
+        let finalData = [...newArr, noteInputs];
+        try {
+          const jsonValue = JSON.stringify(finalData);
+          setData(jsonValue);
+          navigation.navigate("NoteList", noteInputs);
+        } catch (e) {
+          Alert.alert("Error", e);
+        }
+      }
+    } else {
+      if (condition) {
+        Alert.alert("Missing", "You are missing some field !");
+      } else {
+        try {
+          const jsonValue = await AsyncStorage.getItem("Note");
+          if (jsonValue == null) {
+            let newNote = [noteInputs];
+            try {
+              const jsonValue = JSON.stringify(newNote);
+              setData(jsonValue);
+            } catch (e) {
+              Alert.alert("Error", e);
+            }
+            navigation.navigate("NoteList", noteInputs);
+          } else {
+            let newNote = [...getNoteList, noteInputs];
+            try {
+              const jsonValue = JSON.stringify(newNote);
+              setData(jsonValue);
+            } catch (e) {
+              Alert.alert("Error", e);
+            }
+            navigation.navigate("NoteList", noteInputs);
+          }
+        } catch (e) {
+          Alert.alert("Error", e);
+        }
+      }
+    }
   };
 
   return (
@@ -39,6 +112,7 @@ function CreatingNoteScreen({ navigation }) {
         firstIcon={require("../assets/arrow.png")}
         secondButton={"Save"}
         backButton={backHandler}
+        onPress={() => storeNewNotes()}
       />
       <View style={styles.notesOuterContainer}>
         <View style={styles.notesInnerContainer}>
@@ -49,25 +123,30 @@ function CreatingNoteScreen({ navigation }) {
             selectionColor={Colors.accent}
             ref={inputRef}
             onLayout={() => inputRef.current.focus()}
-            onChangeText={(text) => setNoteTitle(text)}
-            value={noteTitle}
+            onChangeText={inputChangeHandler.bind(this, "title")}
+            value={noteInputs.title}
           />
-          <DropdownButton onPress={dropdownToggler}>Category</DropdownButton>
+          <DropdownButton
+            selectedCategory={noteInputs.category}
+            onPress={dropdownToggler}
+          >
+            Category
+          </DropdownButton>
           {toggleDropdown ? (
             <View style={styles.dropDown}>
               {dropdownList.map((data, index) => {
                 return (
-                  <Pressable onPress={() => chooseCategory(data.list)} >
-                    <View key={index} style={styles.dropdownListContainer}>
-                      <Text style={styles.dropdownText}>{data.list}</Text>
-                    </View>
-                  </Pressable>
+                  <Dropdown
+                    key={index}
+                    onPress={() => chooseCategory(data.list)}
+                    data={data}
+                  />
                 );
               })}
             </View>
           ) : null}
         </View>
-        <View style={{ padding: 8 }}>
+        <View style={{ padding: 8, zIndex: -10 }}>
           <TextInput
             placeholder="Type Your Note..."
             autoCapitalize="sentences"
@@ -77,8 +156,8 @@ function CreatingNoteScreen({ navigation }) {
             multiline={true}
             scrollEnabled={true}
             style={styles.noteInput}
-            onChangeText={(text) => setNote(text)}
-            value={note}
+            onChangeText={inputChangeHandler.bind(this, "note")}
+            value={noteInputs.note}
           />
         </View>
       </View>
@@ -119,21 +198,13 @@ const styles = StyleSheet.create({
   dropDown: {
     position: "absolute",
     right: 8,
-    top: 45,
-    height: 100,
+    top: 48,
+    height: 110,
     width: 100,
+    zIndex: -1,
     backgroundColor: Colors.secondary,
     borderRadius: 5,
-  },
-  dropdownListContainer: {
-    height: 30,
-    width: "100%",
-    justifyContent: "center",
+    justifyContent: "space-around",
     alignItems: "center",
-  },
-  dropdownText: {
-    color: Colors.accent,
-    fontWeight: "700",
-    fontSize: 12,
   },
 });
